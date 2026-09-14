@@ -1,7 +1,5 @@
-import Link from "next/link";
 import { winterOlympics } from "@/data/winterOlympics";
 import { winterAthletes } from "@/data/winterOlympics";
-import { cn } from "@/lib/utils";
 
 export default function WinterOlympicsPage() {
   return (
@@ -110,9 +108,8 @@ export default function WinterOlympicsPage() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {winterAthletes.map((athlete) => (
-                  <Link
+                  <div
                     key={athlete.name}
-                    href="#"
                     className="group"
                   >
                     <div className="card p-6 hover:shadow-lg transition-all duration-200">
@@ -136,7 +133,7 @@ export default function WinterOlympicsPage() {
                         {athlete.description}
                       </p>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             </div>

@@ -1,4 +1,5 @@
-import Link from "next/link";
+"use client";
+
 import { MedalRecord } from "@/types/olympics";
 import { getMedalEmoji, getMedalColor, getMedalBgColor } from "@/lib/utils";
 
@@ -11,6 +12,14 @@ export default function MedalCard({ record, onClick }: MedalCardProps) {
   return (
     <div
       onClick={() => onClick?.(record)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick?.(record);
+        }
+      }}
       className="medal-card cursor-pointer hover:shadow-md transition-shadow duration-200 border border-gray-100 rounded-lg bg-white p-4"
     >
       <div className="flex items-start gap-4">
@@ -40,7 +49,6 @@ export default function MedalCard({ record, onClick }: MedalCardProps) {
           </div>
           {record.kind === "individual" && record.athleteIds && (
             <p className="text-sm text-navy-500 truncate max-w-[200px]">
-              {/* In a real implementation, we would map athleteIds to names */}
               {record.athleteIds.map((id, index) => (
                 <span key={id}>Athlete {id}{index < (record.athleteIds?.length ?? 0) - 1 ? ", " : ""}</span>
               ))}
@@ -52,10 +60,10 @@ export default function MedalCard({ record, onClick }: MedalCardProps) {
             </p>
           )}
           <p className="text-sm text-navy-600 mb-2">
-            {record.sport} • {record.event}
+            {record.sport} &bull; {record.event}
           </p>
           <div className="mt-2 text-xs text-navy-400">
-            View full details →
+            View full details &rarr;
           </div>
         </div>
       </div>
