@@ -63,6 +63,7 @@ A premium, editorial-style website documenting India's complete Olympic history 
 │   ├── participations.ts              # 24 non-medal participation records
 │   ├── sports.ts                      # 20 sport entries
 │   └── winterOlympics.ts              # 11 Winter editions + 2 winter athletes
+├── worker/                            # Cloudflare Worker for YouTube API proxy
 ├── lib/
 │   └── utils.ts                       # 13 utility functions
 └── types/
@@ -125,7 +126,7 @@ npm run dev
 
 ```bash
 npm run type-check   # TypeScript validation
-npm run build        # Production build
+npm run build        # Production build (static export to out/)
 npm run start        # Start production server
 ```
 
@@ -138,15 +139,29 @@ The YouTube search feature uses a server-side API route to keep the API key secu
 3. **Cache**: In-memory cache with 1-hour TTL reduces API calls
 4. **Fallback**: If no API key is configured, returns an empty array with a search link
 
-### Cloudflare Worker Deployment
+### YouTube Worker Deployment (worker/)
 
-For production, deploy the YouTube search as a Cloudflare Worker:
+For production, the YouTube search API is deployed as a separate Cloudflare Worker. This keeps the API key secure and avoids exposing it in the static frontend.
+
+**Setup:**
 
 ```bash
 cd worker
+
+# Set the YouTube API key as a Worker secret
 npx wrangler secret put YOUTUBE_API_KEY
+# Paste your YouTube Data API v3 key when prompted
+
+# Deploy the Worker
 npx wrangler deploy
 ```
+
+**Worker Details:**
+- The Worker is defined in `worker/src/index.ts`
+- It proxies YouTube Data API v3 search requests
+- The API key is stored as an encrypted Worker secret (never in code)
+- After deployment, update the frontend to use the Worker URL instead of the local API route
+- The Worker URL will be something like `https://youtube-search.<your-subdomain>.workers.dev`
 
 ## 🎨 Design System
 
@@ -188,7 +203,83 @@ npx wrangler deploy
 
 ## 🌐 Deployment
 
-### Cloudflare Pages
+### Cloudflare Pages Deployment
+
+> ⚠️ **Important:** This project uses Next.js 14 with `output: "export"` for **static HTML export**. You must configure Cloudflare Pages to use the **"Next.js (Static HTML Export)"** framework preset — **NOT** the standard "Next.js" preset. The standard "Next.js" preset triggers OpenNext (`npx opennextjs-cloudflare build`), which is not needed for static export sites and will cause build failures.
+
+#### How It Works
+
+The project builds to the `out/` directory as static HTML. Cloudflare Pages simply serves these files — no server-side rendering or edge functions are needed for the main site.
+
+#### Creating a New Cloudflare Pages Project
+
+1. Go to the [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create**
+2. Select **Pages** → **Create a project** → **Connect to Git** (or **Direct Upload**)
+3. Connect your GitHub/GitLab repository
+4. In the **Build settings**, configure:
+
+| Setting | Value |
+|---------|-------|
+| **Framework preset** | `Next.js (Static HTML Export)` |
+| **Build command** | `npx next build` |
+| **Build output directory** | `out` |
+| **Node.js version** | `18` |
+
+5. Click **Save and Deploy**
+
+#### Changing Settings on an Existing Cloudflare Pages Project
+
+If your project was previously configured with the wrong settings (e.g., standard "Next.js" which triggers OpenNext):
+
+1. Go to **Workers & Pages** → Select your project (e.g., `india-at-the-olympics`)
+2. Click **Settings** tab
+3. Navigate to **Build & deployment**
+4. Under **Build configuration**, update:
+
+| Setting | Change To |
+|---------|-----------|
+| **Framework preset** | `Next.js (Static HTML Export)` (was: `Next.js`) |
+| **Build command** | `npx next build` |
+| **Build output directory** | `out` |
+| **Node.js version** | `18` |
+
+5. Click **Save**
+6. Go to **Deployments** tab → click **Retry deployment** on the latest deployment, or push a new commit to trigger a fresh build
+
+#### Environment Variables
+
+In Cloudflare Pages project settings → **Environment variables**, add:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `YOUTUBE_API_KEY` | Optional | YouTube Data API v3 key |
+
+> **Note:** The static frontend doesn't directly use `YOUTUBE_API_KEY` in Cloudflare Pages (it's not a serverless environment). For the YouTube search feature, deploy the [YouTube Worker](#youtube-worker-deployment-worker) separately and update the frontend to use the Worker URL.
+
+#### Deploy via CLI (Alternative)
+
+You can also deploy directly from the command line using Wrangler:
+
+```bash
+# Build the static export
+npm run build
+
+# Deploy to Cloudflare Pages
+npx wrangler pages deploy out --project-name=india-at-the-olympics
+```
+
+This bypasses the Cloudflare dashboard settings and deploys the `out/` directory directly.
+
+#### Troubleshooting
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| Build fails with OpenNext errors | Framework preset is set to "Next.js" instead of "Next.js (Static HTML Export)" | Change preset in Settings → Build & deployment |
+| `out/` directory not found | Build command or output directory is wrong | Set build command to `npx next build` and output to `out` |
+| Build uses wrong Node.js version | Node version not set to 18 | Set Node.js version to `18` in build settings |
+| Pages show 404 | Output directory doesn't match build output | Ensure output directory is `out` and build completed successfully |
+
+### Wrangler CLI Deployment (Alternative)
 
 ```bash
 # Build for static export (output: 'export' in next.config.js)
@@ -197,12 +288,6 @@ npm run build
 # Deploy to Cloudflare Pages
 npx wrangler pages deploy out --project-name=india-at-the-olympics
 ```
-
-### Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `YOUTUBE_API_KEY` | Optional | YouTube Data API v3 key |
 
 ## 📝 License
 

@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import { Play, ExternalLink, Search } from "lucide-react";
 
 const featuredVideos = [

@@ -1,5 +1,3 @@
-"use client";
-
 import { Trophy, Medal, Award, Target } from "lucide-react";
 import { medals } from "@/data/medals";
 import { calculateMedalStats } from "@/lib/utils";

@@ -45,3 +45,9 @@ next-env.d.ts
 
 # wrangler
 .wrangler/
+
+# OpenNext / Cloudflare Workers
+.worker/
+
+# Session restore data
+session-restore/

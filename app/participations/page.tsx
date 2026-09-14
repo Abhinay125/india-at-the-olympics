@@ -1,8 +1,6 @@
-import Link from "next/link";
 import { participations } from "@/data/participations";
 import { athletes } from "@/data/athletes";
 import { teams } from "@/data/teams";
-import { cn } from "@/lib/utils";
 
 export default function ParticipationsPage() {
   // Group participations by year
