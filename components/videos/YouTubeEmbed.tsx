@@ -8,10 +8,26 @@ interface YouTubeEmbedProps {
   videoId?: string;
 }
 
+/**
+ * YouTube embed with server-side API key protection.
+ *
+ * Architecture:
+ *   Client → Cloudflare Worker (/api/youtube-search) → YouTube Data API v3
+ *
+ * The Worker URL is configured via YOUTUBE_WORKER_URL env var.
+ * If not set (or on build), falls back to a YouTube search link.
+ * The YouTube API key is NEVER exposed to the client.
+ */
+
+const WORKER_URL =
+  process.env.NEXT_PUBLIC_YOUTUBE_WORKER_URL || "";
+
 export default function YouTubeEmbed({ searchQuery, videoId }: YouTubeEmbedProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [resolvedVideoId, setResolvedVideoId] = useState<string | null>(videoId || null);
+  const [resolvedVideoId, setResolvedVideoId] = useState<string | null>(
+    videoId || null
+  );
 
   useEffect(() => {
     if (videoId) {
@@ -20,11 +36,20 @@ export default function YouTubeEmbed({ searchQuery, videoId }: YouTubeEmbedProps
       return;
     }
 
-    // Try to fetch from our API endpoint
+    // If no worker URL configured, skip fetch and show fallback
+    if (!WORKER_URL) {
+      setLoading(false);
+      setError(true);
+      return;
+    }
+
+    const controller = new AbortController();
+
     const fetchVideo = async () => {
       try {
         const res = await fetch(
-          `/api/youtube-search?q=${encodeURIComponent(searchQuery)}&maxResults=1`
+          `${WORKER_URL}?q=${encodeURIComponent(searchQuery)}&maxResults=1`,
+          { signal: controller.signal }
         );
         if (!res.ok) throw new Error("API error");
         const data = await res.json();
@@ -34,13 +59,16 @@ export default function YouTubeEmbed({ searchQuery, videoId }: YouTubeEmbedProps
           setError(true);
         }
       } catch {
-        setError(true);
+        if (!controller.signal.aborted) {
+          setError(true);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchVideo();
+    return () => controller.abort();
   }, [searchQuery, videoId]);
 
   const youtubeSearchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;

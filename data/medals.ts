@@ -237,6 +237,23 @@ export const medals: MedalRecord[] = [
     completeness: "verified",
   },
 
+  // ========== 2000 Sydney Olympics ==========
+  {
+    id: "IND-2000-WEIGHTLIFTING-W69KG-MALLESWARI-BRONZE",
+    kind: "individual",
+    medal: "bronze",
+    year: 2000,
+    season: "summer",
+    city: "Sydney",
+    athleteIds: ["ATH-karnam-malleswari"],
+    sport: "Weightlifting",
+    event: "Women's 69 kg",
+    result: "3rd place (210 kg total)",
+    achievement: "Karnam Malleswari won the bronze medal in the women's 69 kg weightlifting event at the 2000 Sydney Olympics with a total lift of 210 kg. She became the first Indian woman to win an Olympic medal.",
+    sourceUrls: ["https://olympics.com/en/athletes/karnam-malleswari"],
+    completeness: "verified",
+  },
+
   // ========== 2004 Athens Olympics ==========
   {
     id: "IND-2004-SHOOTING-DOUBLETAP-RATHORE-SILVER",
@@ -375,6 +392,21 @@ export const medals: MedalRecord[] = [
     result: "3rd place (Semifinalist)",
     achievement: "Mary Kom won the bronze medal in women's flyweight boxing at the 2012 London Olympics. She was the only Indian woman boxer to qualify for the Olympics and won a bronze in the first-ever women's boxing event at the Olympics.",
     sourceUrls: ["https://olympics.com/en/athletes/mary-kom"],
+    completeness: "verified",
+  },
+  {
+    id: "IND-2012-WRESTLING-FREESTYLE-60KG-DUTT-BRONZE",
+    kind: "individual",
+    medal: "bronze",
+    year: 2012,
+    season: "summer",
+    city: "London",
+    athleteIds: ["ATH-yogeshwar-dutt"],
+    sport: "Wrestling",
+    event: "Men's Freestyle 60 kg",
+    result: "3rd place",
+    achievement: "Yogeshwar Dutt won the bronze medal in the 60 kg freestyle wrestling at the 2012 London Olympics. He won three repechage bouts on the same day to claim the bronze, showcasing incredible resilience and endurance.",
+    sourceUrls: ["https://olympics.com/en/athletes/yogeshwar-dutt"],
     completeness: "verified",
   },
 

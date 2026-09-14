@@ -10,7 +10,7 @@ import { athletes } from "@/data/athletes";
 import { teams } from "@/data/teams";
 import { sports } from "@/data/sports";
 import { cn } from "@/lib/utils";
-import { Search, List, Trophy, Medal, Award, Users } from "lucide-react";
+import { Search, BarChart3, Trophy, Medal, Award, Users } from "lucide-react";
 import { MedalRecord } from "@/types/olympics";
 
 export default function MedalsPage() {
@@ -83,7 +83,7 @@ export default function MedalsPage() {
     <div className="container-wide py-12">
       <div className="mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-navy-800">
-          India's Olympic medal archive
+          India&apos;s Olympic medal archive
         </h1>
         <p className="text-navy-500 mt-3">
           Every card is a button. Select a medal record to reveal the full
@@ -189,7 +189,7 @@ export default function MedalsPage() {
       {filteredMedals.length === 0 ? (
         <div className="text-center py-12">
           <div className="w-16 h-16 rounded-2xl bg-warm-100 flex items-center justify-center mx-auto mb-4">
-            <List className="w-8 h-8 text-navy-300" />
+            <BarChart3 className="w-8 h-8 text-navy-300" />
           </div>
           <h3 className="text-lg font-semibold text-navy-700 mb-2">
             No medals found

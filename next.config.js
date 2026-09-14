@@ -1,25 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  output: "export",
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'upload.wikimedia.org',
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
       },
       {
-        protocol: 'https',
-        hostname: 'img.youtube.com',
+        protocol: "https",
+        hostname: "img.youtube.com",
       },
       {
-        protocol: 'https',
-        hostname: 'i.ytimg.com',
+        protocol: "https",
+        hostname: "i.ytimg.com",
       },
     ],
-    unoptimized: true,
-  },
-  experimental: {
-    workerThreads: false,
   },
 };
 

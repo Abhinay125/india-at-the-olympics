@@ -30,7 +30,7 @@ export default function BronzeMedalsPage() {
     <div className="container-wide py-12">
       <div className="mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-navy-800">
-          India's Olympic Bronze Medals
+          India&apos;s Olympic Bronze Medals
         </h1>
         <p className="text-navy-500 mt-3">
           Every bronze medal won by India in Olympic history

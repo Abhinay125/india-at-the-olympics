@@ -30,7 +30,7 @@ export default function SilverMedalsPage() {
     <div className="container-wide py-12">
       <div className="mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-navy-800">
-          India's Olympic Silver Medals
+          India&apos;s Olympic Silver Medals
         </h1>
         <p className="text-navy-500 mt-3">
           Every silver medal won by India in Olympic history
