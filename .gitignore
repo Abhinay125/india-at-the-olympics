@@ -51,3 +51,6 @@ next-env.d.ts
 
 # Session restore data
 session-restore/
+
+# OpenNext build output
+.open-next/
