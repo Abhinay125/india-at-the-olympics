@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:cloudflare": "npx opennextjs-cloudflare build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "deploy": "npx opennextjs-cloudflare build"
+    "deploy": "npx opennextjs-cloudflare build && npx wrangler deploy"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
